@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private String user = "sergio.casero23@gmail.com";
+    private Observer observer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +37,18 @@ public class MainActivity extends AppCompatActivity {
         NimbeesClient.getUserManager().register(user, new NimbeesRegistrationCallback() {
             @Override
             public void onSuccess() {
-                //Usuario registrado
+                //Nice!
             }
 
             @Override
             public void onFailure(NimbeesException e) {
-                //Fallo
+                //Fail!
             }
         });
     }
 
     private void observeNotifications() {
-        Observer observer = new Observer() {
+        observer = new Observer() {
             @Override
             public void update(Observable observable, Object data) {
                 String message = (String) data;
@@ -56,5 +57,12 @@ public class MainActivity extends AppCompatActivity {
         };
 
         NotificationObserver.getInstance().addObserver(observer);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        NotificationObserver.getInstance().deleteObserver(observer);
     }
 }
